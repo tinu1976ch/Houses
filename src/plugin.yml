@@ -1,0 +1,10 @@
+main: com.hektropolis.houses.Houses
+name: Houses
+version: 1.8
+author: Solivero
+description: Houses
+depend: [Vault]
+commands:
+  house:
+    description: Commands for Houses
+    aliases: [houses, h]
