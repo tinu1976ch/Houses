@@ -123,7 +123,7 @@ public class Utils {
 			if(rs!=null) {
 				if (rs.next()) {
 					do {
-						String world = displayWorlds ? " world: " + dGreen + plugin.getHousesConfig().getConfig().getString("worlds." + rs.getString("world") + ".display-name") : "";
+						String world = displayWorlds ? " world: " + dGreen + plugin.getConfig().getString("worlds." + rs.getString("world") + ".display-name") : "";
 						String message = dGreen + rs.getString("player")  +
 								dAqua + ": class: " + dGreen + rs.getString("class") +
 								dAqua + " number: " + dGreen + rs.getString("number") +
