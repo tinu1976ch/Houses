@@ -27,22 +27,23 @@ public class GeneralEventListener implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayJoin(PlayerJoinEvent e) {
-		final Player player = e.getPlayer();
-		BukkitTask task = new BukkitRunnable() {
+	public void onJoinCheck(PlayerJoinEvent e) {
+		final Player p = e.getPlayer();
+		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			@Override
 			public void run() {
 				try {
-					ResultSet rs = Houses.sqlite.query("SELECT * FROM rentals WHERE player='" + player.getName() + "'");
-					while (rs.next()) {
-						player.sendMessage(Houses.prefix + "§6Your rental at class §2" + rs.getInt("class") + "§6 number §2" + rs.getInt("number") + 
-								"§6 expires in §2" + Utils.getTimeLeft(rs.getInt("expires")));
-					}
-					rs.close();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
+				ResultSet rs = Houses.sqlite.query("SELECT * FROM rentals WHERE player='" + p.getName() + "'");
+				while (rs.next()) {
+					p.sendMessage(ChatColor.translateAlternateColorCodes('&', Houses.prefix + "&6Your rental at class &2" + rs.getInt("class") + "&6 number &2" + rs.getInt("number") + 
+							"&6 expires in &2" + Utils.getTimeLeft(rs.getInt("expires"))));
+				}
+				rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
 				}
 			}
-		}.runTaskLater(plugin, 2);
+		}, 1);
 	}
 }
+
