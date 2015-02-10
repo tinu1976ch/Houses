@@ -43,13 +43,19 @@ public class Helper {
 
 	public void showCommands(int page) {
 		int totalPages = (int) Math.ceil((double) help.length / 7);
+		if (page > totalPages) {
+			for (; page > totalPages; page--) {
+			}
+		}
 		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8--- " + "&6Houses &2Help &8-- &6Page &2" + page + "&6/&2" + totalPages + "&8 ---"));
 		for (int i = page * 7 - 7; i < page * 7 && i < help.length; i++) {
 			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/house &2" + help[i][0] + " &3"
 					+ help[i][1]));
 		}
-		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Type &2/houses help "
-				+ (page + 1) + " " + "&6to read the next page"));
+		if (page != totalPages) {
+		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eType &a/houses help "
+				+ (page + 1) + " " + "&eto read the next page"));
+		}
 	}
 
 	public void showUsage(String cmd) {
