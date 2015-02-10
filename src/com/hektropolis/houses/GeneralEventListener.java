@@ -28,13 +28,8 @@ public class GeneralEventListener implements Listener {
 
 	@EventHandler
 	public void onJoinCheck(PlayerJoinEvent e) {
-			final Player p = e.getPlayer();
-		for (int houseClass : DatabaseQuery.getClasses("rentals")) {
-		for (int houseNumber : DatabaseQuery.getNumbers("rentals", houseClass)) {
-			DatabaseQuery DBQuery = new DatabaseQuery(p.getWorld().getName(), houseClass, houseNumber);
-		if(DBQuery.playerHasRental(p.getName())) {
-			int delay = (int) plugin.getConfig().getDouble("expired-check-timer") * 20;
-			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+		final Player p = e.getPlayer();
+		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			@Override
 			public void run() {
 				try {
@@ -46,13 +41,8 @@ public class GeneralEventListener implements Listener {
 				rs.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
-							}
-						}
-					}, delay);
 				}
 			}
-		}
+		}, 1);
 	}
 }
-
-
