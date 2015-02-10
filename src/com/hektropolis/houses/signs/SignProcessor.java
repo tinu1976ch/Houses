@@ -192,7 +192,7 @@ public class SignProcessor {
 			}
 			int price = getPrice();
 			String dayStr = days == 1 ? ChatColor.ITALIC + " Day" : ChatColor.ITALIC + " Days";
-			String hourStr = hours == 1 ? "Â§0 Hour" : "Â§o Hours";
+			String hourStr = hours == 1 ? ChatColor.BLACK + " Hour" : ChatColor.ITALIC + " Hours";
 			e.setLine(0, SignType.RENT.getHeader());
 			e.setLine(1, days + dayStr);
 			e.setLine(2, hours + hourStr);
