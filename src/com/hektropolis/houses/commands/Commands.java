@@ -68,6 +68,10 @@ public class Commands implements CommandExecutor {
 				helper.showCommands(1);
 				return true;
 			}
+			if (args.length == 1 && Utils.isInt(args[0])) {
+				helpInt();
+				return true;
+			}
 
 			Method[] methods = this.getClass().getMethods();
 
@@ -103,6 +107,11 @@ public class Commands implements CommandExecutor {
 				helper.showCommands(Integer.parseInt(args[1]));
 		} else
 			helper.showUsage(args[0]);
+	}
+	
+	public void helpInt() {
+		helper.showCommands(Integer.parseInt(args[0]));
+		return;
 	}
 
 	@HousesCommand(name = "reload")
