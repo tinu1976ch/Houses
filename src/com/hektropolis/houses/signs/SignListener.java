@@ -2,9 +2,8 @@ package com.hektropolis.houses.signs;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Timer;
-import java.util.TimerTask;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,9 +19,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Door;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
-
 import com.hektropolis.houses.Errors;
 import com.hektropolis.houses.Houses;
 import com.hektropolis.houses.Permissions;
@@ -77,16 +73,16 @@ public class SignListener implements Listener{
 										error.notify("You own too many houses");
 										return;
 									}
-									int balance = (int) Houses.econ.getBalance(player.getName());
+									int balance = (int) Houses.econ.getBalance(player);
 									if(balance >= houseSign.getPrice()) {
 										dbQuery.insertPend(player.getName(), houseSign.getPrice(), "buy");
 										String builder = new DatabaseQuery(houseSign.getWorld().getName(), houseClass, houseNumber).getBuilder();
 										String from = "";
-										if (builder != null && !builder.isEmpty() && plugin.getHousesConfig().getConfig().getBoolean("house-builder-profit"))
+										if (builder != null && !builder.isEmpty() && plugin.getConfig().getBoolean("house-builder-profit"))
 											from = ChatColor.DARK_GREEN + " from " + ChatColor.GOLD + builder;
 										player.sendMessage(ChatColor.DARK_GREEN + "Type " + ChatColor.GOLD + "/house confirm " + ChatColor.DARK_GREEN + "to buy class " + ChatColor.GOLD + houseClass + ChatColor.DARK_GREEN + " number " + ChatColor.GOLD + houseNumber + from);
 									} else
-										error.notify("You can't afford this house");
+										player.sendMessage(ChatColor.translateAlternateColorCodes('&', "You can't afford this house"));
 								} else
 									error.notify("You already rented this house");
 							} else
@@ -129,7 +125,7 @@ public class SignListener implements Listener{
 									error.notify("This house is already rented by " + ChatColor.DARK_RED + dbQuery.getRentalOwner());
 									return;
 								}
-								int balance = (int) Houses.econ.getBalance(player.getName());
+								int balance = (int) Houses.econ.getBalance(player);
 								if(balance >= houseSign.getPrice()) {
 									dbQuery.insertPend(player.getName(), houseSign.getPrice(), "rent", rentSign.getDays(), rentSign.getHours());
 									player.sendMessage(ChatColor.DARK_GREEN + "Type " + ChatColor.GOLD + "/house confirm " + ChatColor.DARK_GREEN + "to rent class " + ChatColor.GOLD + houseClass + ChatColor.DARK_GREEN + " number " + ChatColor.GOLD + houseNumber + "");
@@ -146,7 +142,6 @@ public class SignListener implements Listener{
 					houseClass = houseSign.getHouseClass();
 					houseNumber = houseSign.getHouseNumber();
 					DatabaseQuery dbQuery = new DatabaseQuery(houseSign.getWorld().getName(), houseClass, houseNumber);
-					LeaveSign leaveSign = (LeaveSign) houseSign;
 					if (Permissions.hasPerm(player, "sign.use.leave")) {
 						if(!dbQuery.playerHasHouse(player.getName()) && !dbQuery.playerHasRental(player.getName())) {
 							if (dbQuery.anyoneHasHouse()) {
@@ -192,8 +187,8 @@ public class SignListener implements Listener{
 					}
 					String builder = dbQuery.getBuilder();
 					String from = "";
-					if (builder != null && !builder.isEmpty() && plugin.getHousesConfig().getConfig().getBoolean("house-builder-profit"))
-						from = "from §2" + builder + "§6 ";
+					if (builder != null && !builder.isEmpty() && plugin.getConfig().getBoolean("house-builder-profit"))
+						from = "from " + ChatColor.DARK_GREEN + builder + ChatColor.GOLD + " ";
 					if (hasStaff) {
 						error.notify("This house is owned by staff member " + ChatColor.DARK_RED + Utils.getSignsFromDoor(clicked)[0].getLine(3));
 					}
@@ -203,12 +198,12 @@ public class SignListener implements Listener{
 								openDoor = true;
 							else if (dbQuery.isGuest(player.getName(), "owned")) {
 								openDoor = true;
-								player.sendMessage("§2Welcome to §3" + dbQuery.getHouseOwner() + "§2's house");
+								player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2Welcome to &3" + dbQuery.getHouseOwner() + "&2's house"));
 							}
 							else
 								error.notify("This house is already owned by " + ChatColor.DARK_RED + dbQuery.getHouseOwner());
 						} else {
-							player.sendMessage("§cNobody lives here. §6Buy this house " + from + "if you want to go inside");
+							player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNobody lives here. &6Buy this house " + from + "if you want to go inside"));
 							return;
 						}
 					}
@@ -225,12 +220,12 @@ public class SignListener implements Listener{
 							}
 							else if (dbQuery.isGuest(player.getName(), "rented")) {
 								openDoor = true;
-								player.sendMessage("§2Welcome to §3" + dbQuery.getHouseOwner() + "§2's rented house");
+								player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2Welcome to &3" + dbQuery.getHouseOwner() + "&2's rented house"));
 							}
 							else
 								error.notify("This house is already rented by " + ChatColor.DARK_RED + dbQuery.getRentalOwner());
 						} else {
-							player.sendMessage("§cNobody lives here. §6Rent this house " + from + "if you want to go inside");
+							player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNobody lives here. &Rent this house if you want to go inside."));
 							return;
 						}
 					}
@@ -240,7 +235,7 @@ public class SignListener implements Listener{
 								openDoor = true;
 							else if (dbQuery.isGuest(player.getName(), "owned")) {
 								openDoor = true;
-								player.sendMessage("§2Welcome to §3" + dbQuery.getHouseOwner() + "§2's house");
+								player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2Welcome to &3" + dbQuery.getHouseOwner() + "&2's house"));
 							}
 							else if(dbQuery.anyoneHasHouse() && !dbQuery.anyoneHasRental())
 								error.notify("This house is already owned by " + ChatColor.DARK_RED + dbQuery.getHouseOwner());
@@ -255,12 +250,12 @@ public class SignListener implements Listener{
 							}
 							else if (dbQuery.isGuest(player.getName(), "rented")) {
 								openDoor = true;
-								player.sendMessage("§2Welcome to §3" + dbQuery.getHouseOwner() + "§2's rented house");
+								player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2Welcome to &3" + dbQuery.getHouseOwner() + "&2's rented house"));
 							}
 							else if(!dbQuery.anyoneHasHouse() && dbQuery.anyoneHasRental())
 								error.notify("This house is already rented by " + ChatColor.DARK_RED + dbQuery.getRentalOwner());
 						} else {
-							player.sendMessage("§cNobody lives here. §6Buy or rent this house " + from + "if you want to go inside");
+							player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNobody lives here. &6Buy or rent this house " + from + "if you want to go inside"));
 							return;
 						}
 					}
@@ -270,12 +265,11 @@ public class SignListener implements Listener{
 						door = (Door) state.getData();
 						door.setOpen(!door.isOpen());
 						state.update();
-						if(plugin.getHousesConfig().getConfig().getDouble("autoclose-door-delay") > 0) {
-							int delay = (int) plugin.getHousesConfig().getConfig().getDouble("autoclose-door-delay")*1000;
+						if(plugin.getConfig().getDouble("autoclose-door-delay") > 0) {
+							int delay = (int) plugin.getConfig().getDouble("autoclose-door-delay") * 20;
 							final Door closingDoor = door;
 							final BlockState fState = state;
-							Timer t = new Timer();
-							t.schedule(new TimerTask() {
+							Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 								@Override
 								public void run() {
 									closingDoor.setOpen(false);
@@ -345,19 +339,19 @@ public class SignListener implements Listener{
 					line[0].equalsIgnoreCase("[Leave House]") && Permissions.hasPerm(player, "sign.create.leave") ||
 					line[0].equalsIgnoreCase("[Staff House]") && Permissions.hasPerm(player, "sign.create.staff")) {
 				SignProcessor sProcessor = new SignProcessor(plugin, event, error);
-				if (sProcessor.parseSign())
+				if (sProcessor.parseSign()) {
 					sProcessor.setSign();
-				else
+				} else {
 					return;
-				Timer t = new Timer();
+				}
 				final Location loc = event.getBlock().getLocation();
-				BukkitTask task = new BukkitRunnable() {
+				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 					@Override
 					public void run() {
-						new HouseSign((Sign) loc.getBlock().getState()).registerSignAt(error, loc, player, true, plugin.getHousesConfig().getConfig().getBoolean("house-builder-profit"));
-					}
-				}.runTaskLater(plugin, 2);
-			} else {
+						new HouseSign((Sign) loc.getBlock().getState()).registerSignAt(error, loc, player, true, plugin.getConfig().getBoolean("house-builder-profit"));
+						}
+					}, 2);
+				} else {
 				error.notify("You are not allowed to create this type of sign for houses");
 				return;
 			}
