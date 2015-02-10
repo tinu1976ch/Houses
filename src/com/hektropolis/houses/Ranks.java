@@ -6,27 +6,26 @@ import java.sql.SQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import com.hektropolis.houses.config.Config;
 
 public class Ranks {
 
-	private Config config;
 	private Houses plugin;
 
 	public Ranks(Houses plugin) {
 		this.plugin = plugin;
-		this.config = plugin.getHousesConfig();
 	}
 
 	public void setRank(String player, String buyClass, boolean buy){
-		if(config.getConfig().getBoolean("use-class-ranks")){
+		if(plugin.getConfig().getBoolean("use-class-ranks")){
 			try {
 				ResultSet rs = Houses.sqlite.query("SELECT * FROM houses WHERE player='" + player + "' ORDER BY class");
 				plugin.reloadConfig();
 				String world = null;
 				String[] groups = Houses.permission.getPlayerGroups(world, player);
-				String rank = config.getConfig().getString("classes." + buyClass + ".rank");
+				String rank = plugin.getConfig().getString("classes." + buyClass + ".rank");
 				if(rank != null){
 					if(buy){
 						if(rs.next()) {
@@ -44,7 +43,7 @@ public class Ranks {
 					}
 					else if(!buy){
 						if(rs.next()){
-							String rankFromDB = config.getConfig().getString("classes." + rs.getString("class") + ".rank");
+							String rankFromDB = plugin.getConfig().getString("classes." + rs.getString("class") + ".rank");
 							if(!rs.getString("class").equalsIgnoreCase("admin") && !rs.getString("class").equalsIgnoreCase("moderator")) {
 								removeRanks(world, groups, player);
 								addRank(world, rankFromDB, player);
@@ -52,7 +51,7 @@ public class Ranks {
 						}
 						else{
 							removeRanks(world, groups, player);
-							Houses.permission.playerAddGroup(world, player, config.getConfig().getString("homeless"));
+							Houses.permission.playerAddGroup(world, player, plugin.getConfig().getString("homeless"));
 							Bukkit.getServer().broadcastMessage(ChatColor.RED + "Player " + player + " is homeless!");
 						}
 					}
