@@ -33,6 +33,7 @@ public class DatabaseQuery {
 		}
 		return rsHasOutput(rs);
 	}
+	
 	public String getRentalOwner() {
 		try {
 			ResultSet rs = Houses.sqlite.query("SELECT * FROM rentals WHERE class='"  +  houseClass  +  "' AND number='"  +  houseNumber  +  "' AND world='" + world + "'");
@@ -47,6 +48,7 @@ public class DatabaseQuery {
 		}
 		return null;
 	}
+	
 	public int getHouseId() {
 		int id = 0;
 		try {
@@ -63,6 +65,7 @@ public class DatabaseQuery {
 		}
 		return id;
 	}
+	
 	public boolean rentIsValid(String player) {
 		try {
 			ResultSet rs = Houses.sqlite.query("SELECT * FROM rentals WHERE player='" + player +  "' AND class='" + houseClass + "' AND number='" + houseNumber + "' AND world='" + world + "'");
@@ -79,6 +82,7 @@ public class DatabaseQuery {
 		}
 		return false;
 	}
+	
 	public void deleteRental(String player) {
 		try {
 			Houses.sqlite.query("DELETE FROM guests WHERE house_id=" + getHouseId());
@@ -87,6 +91,7 @@ public class DatabaseQuery {
 			e.printStackTrace();
 		}
 	}
+	
 	public void insertRental(String player, int days, int hours) {
 		try {
 			int expires = ((int) (System.currentTimeMillis() / 1000L)) + (days*86400) + (hours*3600);
@@ -95,6 +100,7 @@ public class DatabaseQuery {
 			e1.printStackTrace();
 		}
 	}
+	
 	public void deleteOwner(String player) {
 		try {
 			Houses.sqlite.query("DELETE FROM guests WHERE house_id=" + getHouseId());
@@ -103,6 +109,7 @@ public class DatabaseQuery {
 			e.printStackTrace();
 		}
 	}
+	
 	public void deleteGuest(String player) {
 		try {
 			Houses.sqlite.query("DELETE FROM guests WHERE player='" + player + "' AND house_id=" + getHouseId());
@@ -110,6 +117,7 @@ public class DatabaseQuery {
 			e.printStackTrace();
 		}
 	}
+	
 	public boolean playerHasHouse(String player) {
 		ResultSet rs = null;
 		try {
@@ -119,6 +127,7 @@ public class DatabaseQuery {
 		}
 		return rsHasOutput(rs);
 	}
+	
 	public boolean anyoneHasHouse() {
 		ResultSet rs = null;
 		try {
@@ -128,6 +137,7 @@ public class DatabaseQuery {
 		}
 		return rsHasOutput(rs);
 	}
+	
 	public String getHouseOwner() {
 		try {
 			ResultSet rs = Houses.sqlite.query("SELECT * FROM houses WHERE class='"  +  houseClass  +  "' AND number='"  +  houseNumber  +  "' AND world='" + world + "'");
@@ -142,6 +152,7 @@ public class DatabaseQuery {
 		}
 		return null;
 	}
+	
 	public boolean playerHasRental(String player) {
 		ResultSet rs = null;
 		try {
@@ -151,10 +162,11 @@ public class DatabaseQuery {
 		}
 		return rsHasOutput(rs);
 	}
+	
 	public static boolean hasTooMany(Houses plugin, String player) {
 		int totalHouses = 0;
 		int totalRentals = 0;
-		int allowedHouses = plugin.getConfig().getInt("maximum-houses");
+		int allowedHouses = plugin.getHousesConfig().getConfig().getInt("maximum-houses");
 		if (allowedHouses < 0)
 			return false;
 		try {
@@ -176,6 +188,7 @@ public class DatabaseQuery {
 		else
 			return false;
 	}
+	
 	public static boolean rsHasOutput(ResultSet rs) {
 		try {
 			if (rs.next()) {
@@ -188,6 +201,7 @@ public class DatabaseQuery {
 		}
 		return false;
 	}
+	
 	public static int[] getNumbers(String tableName, int houseClass) {
 		ResultSet rs;
 		int[] numbers = null;
@@ -205,6 +219,7 @@ public class DatabaseQuery {
 		}
 		return numbers;
 	}
+	
 	public static int[] getClasses(String tableName) {
 		ResultSet rs;
 		int[] classes = null;
@@ -237,6 +252,7 @@ public class DatabaseQuery {
 		}
 		return players;
 	}
+	
 	public static String[] getWorldNames(String tableName) {
 		ResultSet rs;
 		String[] worlds = null;
@@ -252,6 +268,7 @@ public class DatabaseQuery {
 		}
 		return worlds;
 	}
+	
 	@Deprecated
 	public boolean signMatchesDatabase(Location loc) {
 		try {
@@ -319,7 +336,7 @@ public class DatabaseQuery {
 
 	public String getBuilder() {
 		try {
-			String builder = "";
+			String builder = null;
 			ResultSet rs = Houses.sqlite.query("SELECT builder FROM signs WHERE class=" + houseClass + " AND number=" + houseNumber + " AND world='" + world + "'");
 			if (rs.next())
 				builder = rs.getString("builder");
