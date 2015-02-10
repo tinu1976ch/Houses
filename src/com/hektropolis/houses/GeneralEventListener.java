@@ -34,7 +34,6 @@ public class GeneralEventListener implements Listener {
 			DatabaseQuery DBQuery = new DatabaseQuery(p.getWorld().getName(), houseClass, houseNumber);
 		if(DBQuery.playerHasRental(p.getName())) {
 			int delay = (int) plugin.getConfig().getDouble("expired-check-timer") * 20;
-			Bukkit.broadcastMessage(Integer.toString(delay));
 			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			@Override
 			public void run() {
