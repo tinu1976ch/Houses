@@ -6,20 +6,17 @@ import java.sql.SQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
-
-import com.hektropolis.houses.config.Config;
 
 public class Ranks {
 
 	private Houses plugin;
 
 	public Ranks(Houses plugin) {
-		this.plugin = plugin;
+	    this.plugin = plugin;
 	}
 
 	public void setRank(String player, String buyClass, boolean buy){
-		if(plugin.getConfig().getBoolean("use-class-ranks")){
+		if(config.getConfig().getBoolean("use-class-ranks")){
 			try {
 				ResultSet rs = Houses.sqlite.query("SELECT * FROM houses WHERE player='" + player + "' ORDER BY class");
 				plugin.reloadConfig();
@@ -36,7 +33,7 @@ public class Ranks {
 									addRank(world, rank, player);
 								}
 							}
-						} else{
+						} else {
 							removeRanks(world, groups, player);
 							addRank(world, rank, player);
 						}
@@ -48,10 +45,9 @@ public class Ranks {
 								removeRanks(world, groups, player);
 								addRank(world, rankFromDB, player);
 							}
-						}
-						else{
+						} else{
 							removeRanks(world, groups, player);
-							Houses.permission.playerAddGroup(world, player, plugin.getConfig().getString("homeless"));
+							Houses.permission.playerAddGroup(world, player, config.getConfig().getString("homeless"));
 							Bukkit.getServer().broadcastMessage(ChatColor.RED + "Player " + player + " is homeless!");
 						}
 					}
