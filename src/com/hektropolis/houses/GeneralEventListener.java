@@ -38,7 +38,6 @@ public class GeneralEventListener implements Listener {
 			@Override
 			public void run() {
 				try {
-				Bukkit.broadcastMessage("test");
 				ResultSet rs = Houses.sqlite.query("SELECT * FROM rentals WHERE player='" + p.getName() + "'");
 				while (rs.next()) {
 					p.sendMessage(ChatColor.translateAlternateColorCodes('&', Houses.prefix + "&6Your rental at class &2" + rs.getInt("class") + "&6 number &2" + rs.getInt("number") + 
