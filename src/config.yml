@@ -32,6 +32,9 @@ homeless: default
 # If using class prices, Houses will use this percentage to calculate sell prices on signs
 sell-percentage: 75
 
+# Timer to check rent every amount of seconds - Note: Lower values could cause lag
+expired-check-timer: 60
+
 # This is where you configure your classes. The staff classses (owner/admin/mod) can not be configured below 
 # as they should be added by other staff manually for security reasons.
 # There are two example of how classes can be configured below.
