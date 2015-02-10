@@ -43,20 +43,20 @@ public class Helper {
 
 	public void showCommands(int page) {
 		int totalPages = (int) Math.ceil((double) help.length / 7);
-		sender.sendMessage("§8--- " + "§6Houses §2Help §8-- §6Page §2" + page + "§6/§2" + totalPages + "§8 ---");
+		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8--- " + "&6Houses &2Help &8-- &6Page &2" + page + "&6/&2" + totalPages + "&8 ---"));
 		for (int i = page * 7 - 7; i < page * 7 && i < help.length; i++) {
-			sender.sendMessage("§6/house §2" + help[i][0] + " "
-					+ ChatColor.DARK_AQUA + help[i][1]);
+			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/house &2" + help[i][0] + " &3"
+					+ help[i][1]));
 		}
-		sender.sendMessage("§6Type §2/houses help "
-				+ (page + 1) + " " + "§6to read the next page");
+		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Type &2/houses help "
+				+ (page + 1) + " " + "&6to read the next page"));
 	}
 
 	public void showUsage(String cmd) {
 		for (int i = 0; i < help.length; i++) {
 			if (cmd.equalsIgnoreCase(help[i][0])) {
-				sender.sendMessage("§6Description: §2" + help[i][2]);
-				sender.sendMessage("§6/house §2" + help[i][0] + " §3" + help[i][1]);
+				sender.sendMessage(ChatColor.GOLD + "Description: " + ChatColor.DARK_GREEN + help[i][2]);
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/house &2" + help[i][0] + " &3" + help[i][1]));
 				//sender.sendMessage(gold+"Permision: " + ChatColor.DARK_AQUA + help[i]);
 				break;
 			}
