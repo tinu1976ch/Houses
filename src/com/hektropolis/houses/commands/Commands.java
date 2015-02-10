@@ -244,13 +244,13 @@ public class Commands implements CommandExecutor {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			sender.sendMessage(ChatColor.DARK_GRAY + "--- &6General House Info " + ChatColor.DARK_GRAY + "---");
-			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2Houses: " + ChatColor.DARK_GRAY + houses));
+			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7&m<---&6 General House Info " + "&7&m--->"));
+			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2Houses: " + ChatColor.DARK_AQUA + houses));
 			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&2Classes: " + ChatColor.DARK_AQUA + classes));
 			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&2Owned: " + ChatColor.DARK_AQUA + owned));
 			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&2Avaliable: " + ChatColor.DARK_AQUA + (houses - owned)));
 			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&2Price range: " + ChatColor.DARK_AQUA + lowPrice + "-" + highPrice));
-			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&6Type &2/house info [class]&6 to see info for a class"));
+			sender.sendMessage(ChatColor.translateAlternateColorCodes('&',"&eType &a/house info [house]&e to see info for a house"));
 		} else if (args.length == 2) {
 			if (Utils.isClass(sender, args[1])) {
 				if (!config.isString("classes." + args[1] + ".info")) {
