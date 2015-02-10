@@ -41,8 +41,7 @@ public class Permissions {
 			if (args[1].equalsIgnoreCase("increment") ||
 					args[1].equalsIgnoreCase("decrement"))
 				perm = args[0] + "." + args[1];
-		}
-		else {
+		} else {
 			perm = args[0];
 			for (String cmd : noPermCommands) {
 				if (cmd.equalsIgnoreCase(args[0]))
@@ -63,8 +62,7 @@ public class Permissions {
 					sender.isOp()) {
 				//System.out.println("Has permission");
 				return true;
-			}
-			else {
+			} else {
 				//System.out.println("Does NOT have permission");
 				return false;
 			}
