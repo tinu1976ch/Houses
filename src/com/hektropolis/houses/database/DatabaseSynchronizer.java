@@ -19,11 +19,9 @@ import com.hektropolis.houses.signs.SignType;
 
 public class DatabaseSynchronizer {
 
-	private Config config;
 	private Houses plugin;
 
 	public DatabaseSynchronizer(Houses plugin) {
-		this.config = plugin.getHousesConfig();
 		this.plugin = plugin;
 	}
 
@@ -42,7 +40,7 @@ public class DatabaseSynchronizer {
 					int bestClass = classesRs.getInt("class");
 					classesRs.close();
 					String[] groups = Houses.permission.getPlayerGroups((World) null, player);
-					String rank = config.getConfig().getString("classes." + bestClass + ".rank");
+					String rank = plugin.getConfig().getString("classes." + bestClass + ".rank");
 					if (rank != null && rank != "") {
 						for (String group : groups) {
 							if (!group.equalsIgnoreCase(rank)) {
