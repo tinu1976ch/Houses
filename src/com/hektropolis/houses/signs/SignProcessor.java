@@ -191,8 +191,8 @@ public class SignProcessor {
 				hours -= 24;
 			}
 			int price = getPrice();
-			String dayStr = days == 1 ? "§o Day" : "§o Days";
-			String hourStr = hours == 1 ? "§0 Hour" : "§o Hours";
+			String dayStr = days == 1 ? ChatColor.ITALIC + " Day" : ChatColor.ITALIC + " Days";
+			String hourStr = hours == 1 ? "Â§0 Hour" : "Â§o Hours";
 			e.setLine(0, SignType.RENT.getHeader());
 			e.setLine(1, days + dayStr);
 			e.setLine(2, hours + hourStr);
@@ -214,17 +214,16 @@ public class SignProcessor {
 
 	private int getPrice() {
 		int price = 0;
-		Config config = plugin.getHousesConfig();
 		if (line[3].isEmpty()) {
-			if (config.getConfig().getBoolean("use-class-prices")) {
+			if (plugin.getConfig().getBoolean("use-class-prices")) {
 				if (type == SignType.BUY || type == SignType.SELL) {
-					if(config.getConfig().isInt("classes." + line[1] + ".price")) {
+					if(plugin.getConfig().isInt("classes." + line[1] + ".price")) {
 						if (type == SignType.BUY)
-							price = config.getConfig().getInt("classes." + line[1] + ".price");
+							price = plugin.getConfig().getInt("classes." + line[1] + ".price");
 						else if (type == SignType.SELL)
-							price = config.getConfig().getInt("classes." + line[1] + ".price")*config.getConfig().getInt("sell-percentage")/100;
+							price = plugin.getConfig().getInt("classes." + line[1] + ".price")*plugin.getConfig().getInt("sell-percentage")/100;
 					} else {
-						error.notify("Price for class " + line[1] + " is " + config.getConfig().get("classes." + line[1] + ".price"));
+						error.notify("Price for class " + line[1] + " is " + plugin.getConfig().get("classes." + line[1] + ".price"));
 						error.warning("Pre-defined price is not a number");
 					}
 				}
@@ -232,11 +231,11 @@ public class SignProcessor {
 				if (type == SignType.RENT) {
 					RentSign rentSign = new RentSign((Sign) e.getBlock().getState());
 					houseClass = rentSign.getHelperSign().getHouseClass();
-					if (config.getConfig().isInt("classes." + houseClass + ".per-day-cost")) {
+					if (plugin.getConfig().isInt("classes." + houseClass + ".per-day-cost")) {
 						int dayCost = plugin.getConfig().getInt("classes." + rentSign.getHelperSign().getHouseClass() + ".per-day-cost");
 						price = Integer.parseInt(line[1]) * dayCost + (Integer.parseInt(line[2]) * dayCost) / 24;
 					} else {
-						error.warning("Per day cost for class " + houseClass + " is " + config.getConfig().get("classes." + houseClass + ".per-day-cost"));
+						error.warning("Per day cost for class " + houseClass + " is " + plugin.getConfig().get("classes." + houseClass + ".per-day-cost"));
 						error.severe("Pre-defined price is not a number");
 					}
 				}
