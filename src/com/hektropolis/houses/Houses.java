@@ -31,16 +31,10 @@ public class Houses extends JavaPlugin {
 	public static Permission permission;
 	public static String prefix;
 
-	private Config config;
-	private ConfigManager manager;
-
-	@Override
 	public void onEnable() {
 		prefix = "["  +  getDescription().getName()  +  "] ";
-		if (getServer().getPluginManager().getPlugin("SQLibrary") != null) {
-			log.info(prefix + "SQLibrary by Patpeter is NO LONGER NEEDED for Houses! Feel free to uninstall SQLibrary if no other plugin uses it");
-		}
-		setupConfig();
+		getConfig().options().copyDefaults(true);
+		saveConfig();
 		setupBackups();
 		setupDatabase();
 		if (getServer().getPluginManager().getPlugin("Vault") == null) {
@@ -65,36 +59,13 @@ public class Houses extends JavaPlugin {
 		PluginManager manager = this.getServer().getPluginManager();
 		manager.registerEvents(new SignListener(this), this);
 		manager.registerEvents(new GeneralEventListener(this), this);
-		getCommand("house").setExecutor(new Commands(this, config));
-		BukkitTask task = new RentScanner(this).runTaskTimer(this, 20, 20);
+		getCommand("house").setExecutor(new Commands(this));
+		new RentScanner(this);
 	}
-	@Override
+	
 	public void onDisable() {
 		if(sqlite != null)
 			sqlite.close();
-		if(this.config != null)
-			this.config.save();
-	}
-
-	public Config getHousesConfig() {
-		return config;
-	}
-
-	public void setupConfig() {
-		this.manager = new ConfigManager(this);
-		File configFile = manager.getConfigFile("config.yml");
-		this.saveDefaultConfig();
-		this.config = new Config(manager.getConfigContent(configFile), configFile, manager.getCommentsNum(configFile), this);
-		ConfigUpdater updater = new ConfigUpdater(config);
-		if (updater.hasOld()) {
-			log.warning(prefix + "Using old conig");
-			updater.copyFromOld(this);
-			updater = new ConfigUpdater(config);
-		}
-		updater.updateDefaults();
-		updater.updateWorlds();
-		updater.updateDeprecated();
-		this.config.save();
 	}
 
 	private void setupDatabase() {
@@ -178,7 +149,7 @@ public class Houses extends JavaPlugin {
 			sqlite.query("UPDATE signs SET builder='server' WHERE builder=NULL OR builder=''");
 		} catch (SQLException e) {}
 	}
-	private void addMultiWorldSupport() {
+	/*private void addMultiWorldSupport() {
 		try {
 			sqlite.query("ALTER TABLE signs ADD COLUMN world VARCHAR(255)");
 		} catch (SQLException e) {}
@@ -196,7 +167,7 @@ public class Houses extends JavaPlugin {
 				e.printStackTrace();
 			}
 		}
-	}
+	}*/
 	private void setupBackups() {
 		File backupFiles;
 		File oldDatabaseFile;
