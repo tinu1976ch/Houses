@@ -154,7 +154,7 @@ public class DatabaseQuery {
 	public static boolean hasTooMany(Houses plugin, String player) {
 		int totalHouses = 0;
 		int totalRentals = 0;
-		int allowedHouses = plugin.getHousesConfig().getConfig().getInt("maximum-houses");
+		int allowedHouses = plugin.getConfig().getInt("maximum-houses");
 		if (allowedHouses < 0)
 			return false;
 		try {
