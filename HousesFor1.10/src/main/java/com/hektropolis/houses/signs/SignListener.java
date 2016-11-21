@@ -25,6 +25,10 @@ import com.hektropolis.houses.Permissions;
 import com.hektropolis.houses.Ranks;
 import com.hektropolis.houses.Utils;
 import com.hektropolis.houses.database.DatabaseQuery;
+import java.util.logging.Level;
+import org.bukkit.event.Event;
+import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 public class SignListener implements Listener {
 
@@ -39,6 +43,9 @@ public class SignListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
+        if(event.getHand().equals(EquipmentSlot.OFF_HAND)){
+            return;
+        }
         Block clicked = event.getClickedBlock();
         Player player = event.getPlayer();
         Errors error = new Errors(player);
@@ -168,6 +175,7 @@ public class SignListener implements Listener {
                     }
                 }
             } else if (clicked.getType().equals(Material.IRON_DOOR_BLOCK)) {
+                event.setCancelled(true);
                 BlockState state = clicked.getState();
                 Door door = (Door) state.getData();
                 if (!door.isTopHalf()) {
@@ -269,7 +277,9 @@ public class SignListener implements Listener {
                         clicked = clicked.getRelative(BlockFace.DOWN);
                         state = clicked.getState();
                         door = (Door) state.getData();
+                        //Bukkit.getLogger().info("Open before opening: " + door.isOpen());
                         door.setOpen(!door.isOpen());
+                        //Bukkit.getLogger().info("Open after opening: " + door.isOpen());
                         state.update();
                         if (plugin.getConfig().getDouble("autoclose-door-delay") > 0) {
                             int delay = (int) plugin.getConfig().getDouble("autoclose-door-delay") * 20;
@@ -278,13 +288,17 @@ public class SignListener implements Listener {
                             Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
                                 @Override
                                 public void run() {
+                                    //Bukkit.getLogger().info("Open before closing: " + closingDoor.isOpen());
                                     closingDoor.setOpen(false);
+                                    //Bukkit.getLogger().info("Open after closing: " + closingDoor.isOpen());
                                     fState.update();
                                 }
                             }, delay);
                         }
                     }
                 }
+            } else {
+                Bukkit.getLogger().info(event.getEventName());
             }
             return;
         }
