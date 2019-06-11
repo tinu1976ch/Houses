@@ -1,7 +1,7 @@
 main: com.hektropolis.houses.Houses
 name: Houses
-version: 1.9.1
-author: Solivero, CC007
+version: 2.0
+author: Solivero, CC007, steve4744
 description: Houses
 depend: [Vault]
 commands:
