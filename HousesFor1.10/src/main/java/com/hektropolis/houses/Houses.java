@@ -12,13 +12,11 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.FileUtil;
 
 import com.hektropolis.houses.commands.Commands;
 import com.hektropolis.houses.config.Config;
 import com.hektropolis.houses.config.ConfigManager;
-import com.hektropolis.houses.config.ConfigUpdater;
 import com.hektropolis.houses.database.SQLite;
 import com.hektropolis.houses.signs.SignListener;
 

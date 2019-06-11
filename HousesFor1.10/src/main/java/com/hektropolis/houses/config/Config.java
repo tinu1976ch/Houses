@@ -25,7 +25,8 @@ public class Config {
 		this.manager = new ConfigManager(plugin);
 
 		this.configFile = configFile;
-		this.config = YamlConfiguration.loadConfiguration(configStream);
+		//this.config = YamlConfiguration.loadConfiguration(configStream);
+		this.config = YamlConfiguration.loadConfiguration(configFile);
 	}
 
 	private void loadValues() {
@@ -65,7 +66,8 @@ public class Config {
 	}
 
 	public void reload() {
-		this.config = YamlConfiguration.loadConfiguration(manager.getConfigContent(configFile));
+		//this.config = YamlConfiguration.loadConfiguration(manager.getConfigContent(configFile));
+		this.config = YamlConfiguration.loadConfiguration(configFile);
 	}
 
 	public void save() {
