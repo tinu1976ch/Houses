@@ -11,6 +11,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.type.Door;
 import org.bukkit.block.data.type.WallSign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,7 +20,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.material.Door;
+//import org.bukkit.material.Door;
 import com.hektropolis.houses.Errors;
 import com.hektropolis.houses.Houses;
 import com.hektropolis.houses.Permissions;
@@ -106,10 +107,11 @@ public class SignListener implements Listener {
                                 player.sendMessage(ChatColor.DARK_GREEN + "Type " + ChatColor.GOLD + "/house confirm " + ChatColor.DARK_GREEN + "to sell class " + ChatColor.GOLD + houseClass + ChatColor.DARK_GREEN + " number " + ChatColor.GOLD + houseNumber + "");
                                 Block doorBlock = Utils.getDoorFromSign((Sign) clicked.getState());
                                 if (doorBlock != null) {
-                                    BlockState state = doorBlock.getState();
-                                    Door door = (Door) state.getData();
+                                    //BlockState state = doorBlock.getState();
+                                    //Door door = (Door) state.getData();
+                                	Door door = (Door) doorBlock.getBlockData();
                                     door.setOpen(false);
-                                    state.update();
+                                    doorBlock.getState().update();
                                 }
                                 return;
                             } else {
@@ -173,13 +175,13 @@ public class SignListener implements Listener {
                         error.notify("You are not allowed to leave houses");
                     }
                 }
-            } else if (clicked.getType().equals(Material.IRON_DOOR)) {
+            } else if (clicked.getType() == Material.IRON_DOOR) {
                 event.setCancelled(true);
-                BlockState state = clicked.getState();
+                /*BlockState state = clicked.getState();
                 Door door = (Door) state.getData();
                 if (!door.isTopHalf()) {
                     clicked = clicked.getRelative(BlockFace.UP);
-                }
+                }*/
                 if (Utils.getSignsFromDoor(clicked).length > 0) {
                     boolean hasBuySell = false;
                     boolean hasRent = false;
@@ -274,16 +276,18 @@ public class SignListener implements Listener {
                     }
                     if (openDoor) {
                         clicked = clicked.getRelative(BlockFace.DOWN);
-                        state = clicked.getState();
-                        door = (Door) state.getData();
+                        //state = clicked.getState();
+                        //door = (Door) state.getData();
+                        Door door = (Door) clicked.getBlockData();
                         //Bukkit.getLogger().info("Open before opening: " + door.isOpen());
                         door.setOpen(!door.isOpen());
                         //Bukkit.getLogger().info("Open after opening: " + door.isOpen());
-                        state.update();
+                        //state.update();
+                        clicked.getState().update();
                         if (plugin.getConfig().getDouble("autoclose-door-delay") > 0) {
                             int delay = (int) plugin.getConfig().getDouble("autoclose-door-delay") * 20;
                             final Door closingDoor = door;
-                            final BlockState fState = state;
+                            final BlockState fState = clicked.getState();
                             Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
                                 @Override
                                 public void run() {

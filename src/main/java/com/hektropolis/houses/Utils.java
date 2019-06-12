@@ -84,11 +84,9 @@ public class Utils {
 			return null;
 		}
 		List<HouseSign> signList = new ArrayList<HouseSign>();
-		//Door door = (Door) doorBlock.getState().getData();
-		Door door = (Door) doorBlock.getBlockData();
-		if (door.getHalf() != Bisected.Half.TOP)
-		//if(!door.isTopHalf())
-			doorBlock = doorBlock.getRelative(BlockFace.UP);
+		
+		doorBlock = getDoorBlock(doorBlock);
+		
 		int ix = doorBlock.getX();
 		int iy = doorBlock.getY();
 		int iz = doorBlock.getZ();
@@ -108,6 +106,15 @@ public class Utils {
 		}
 		return signList.toArray(new HouseSign[signList.size()]);
 	}
+
+	private static Block getDoorBlock(Block block) {
+		Door door = (Door) block.getBlockData();
+		if (door.getHalf() != Bisected.Half.TOP) {
+			block = block.getRelative(BlockFace.UP);
+		}
+		return block;
+	}
+
 	public static boolean transactionSucces(Houses plugin, EconomyResponse[] withdep, Player player, String action, String builder) {
 		int balance = (int) withdep[0].balance;
 		int amount = (int) withdep[0].amount;

@@ -19,12 +19,13 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.type.Door;
 import org.bukkit.block.data.type.WallSign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.material.Door;
+//import org.bukkit.material.Door;
 import org.bukkit.util.FileUtil;
 
 import com.hektropolis.houses.Errors;
@@ -433,8 +434,9 @@ public class Commands implements CommandExecutor {
                     }
                     rsS.close();
                     if (doorBlock != null) {
-                        BlockState state = doorBlock.getState();
-                        Door door = (Door) state.getData();
+                        //BlockState state = doorBlock.getState();
+                        //Door door = (Door) state.getData();
+                    	Door door = (Door) doorBlock.getBlockData();
                         Location loc = doorBlock.getRelative(door.getFacing().getOppositeFace()).getLocation();
                         player.teleport(loc);
                         while (!(player.getLocation().getBlock().getType() == Material.AIR) && player.getLocation().getBlockY() < 253) {
@@ -470,8 +472,9 @@ public class Commands implements CommandExecutor {
                         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Teleporting to class &c" + rs.getInt("class") + "&6 number &c" + rs.getInt("number") + "&6..."));
                         Block sign = player.getWorld().getBlockAt(rs.getInt("x"), rs.getInt("y"), rs.getInt("z"));
                         Block doorBlock = Utils.getDoorFromSign((Sign) sign.getState());
-                        BlockState state = doorBlock.getState();
-                        Door door = (Door) state.getData();
+                        //BlockState state = doorBlock.getState();
+                        //Door door = (Door) state.getData();
+                        Door door = (Door) doorBlock.getBlockData();
                         Location loc = doorBlock.getRelative(door.getFacing().getOppositeFace()).getLocation().add(0, 1, 0);
                         player.teleport(loc);
                     } else {
