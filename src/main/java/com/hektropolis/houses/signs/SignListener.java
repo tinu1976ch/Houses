@@ -9,9 +9,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.block.data.type.Door;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Openable;
 import org.bukkit.block.data.type.WallSign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,7 +20,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-//import org.bukkit.material.Door;
 import com.hektropolis.houses.Errors;
 import com.hektropolis.houses.Houses;
 import com.hektropolis.houses.Permissions;
@@ -54,7 +53,6 @@ public class SignListener implements Listener {
             return;
         }
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-        	//if (clicked.getType().equals(Material.WALL_SIGN)) {
             if (clicked.getBlockData() instanceof WallSign) {
                 houseSign = new HouseSign((Sign) clicked.getState()).getType();
                 int houseClass = 0;
@@ -107,11 +105,9 @@ public class SignListener implements Listener {
                                 player.sendMessage(ChatColor.DARK_GREEN + "Type " + ChatColor.GOLD + "/house confirm " + ChatColor.DARK_GREEN + "to sell class " + ChatColor.GOLD + houseClass + ChatColor.DARK_GREEN + " number " + ChatColor.GOLD + houseNumber + "");
                                 Block doorBlock = Utils.getDoorFromSign((Sign) clicked.getState());
                                 if (doorBlock != null) {
-                                    //BlockState state = doorBlock.getState();
-                                    //Door door = (Door) state.getData();
-                                	Door door = (Door) doorBlock.getBlockData();
-                                    door.setOpen(false);
-                                    doorBlock.getState().update();
+                                    BlockData doorData = doorBlock.getBlockData();
+                                    ((Openable) doorData).setOpen(false);
+                                    doorBlock.setBlockData(doorData);
                                 }
                                 return;
                             } else {
@@ -177,11 +173,7 @@ public class SignListener implements Listener {
                 }
             } else if (clicked.getType() == Material.IRON_DOOR) {
                 event.setCancelled(true);
-                /*BlockState state = clicked.getState();
-                Door door = (Door) state.getData();
-                if (!door.isTopHalf()) {
-                    clicked = clicked.getRelative(BlockFace.UP);
-                }*/
+                clicked = Utils.getDoorBlock(clicked);
                 if (Utils.getSignsFromDoor(clicked).length > 0) {
                     boolean hasBuySell = false;
                     boolean hasRent = false;
@@ -276,25 +268,17 @@ public class SignListener implements Listener {
                     }
                     if (openDoor) {
                         clicked = clicked.getRelative(BlockFace.DOWN);
-                        //state = clicked.getState();
-                        //door = (Door) state.getData();
-                        Door door = (Door) clicked.getBlockData();
-                        //Bukkit.getLogger().info("Open before opening: " + door.isOpen());
-                        door.setOpen(!door.isOpen());
-                        //Bukkit.getLogger().info("Open after opening: " + door.isOpen());
-                        //state.update();
-                        clicked.getState().update();
+                        BlockData doorData = clicked.getBlockData();
+                        ((Openable) doorData).setOpen(true);
+                        clicked.setBlockData(doorData);
                         if (plugin.getConfig().getDouble("autoclose-door-delay") > 0) {
                             int delay = (int) plugin.getConfig().getDouble("autoclose-door-delay") * 20;
-                            final Door closingDoor = door;
-                            final BlockState fState = clicked.getState();
+                            ((Openable) doorData).setOpen(false);
+                            final Block closing = clicked;
                             Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
                                 @Override
                                 public void run() {
-                                    //Bukkit.getLogger().info("Open before closing: " + closingDoor.isOpen());
-                                    closingDoor.setOpen(false);
-                                    //Bukkit.getLogger().info("Open after closing: " + closingDoor.isOpen());
-                                    fState.update();
+                                    closing.setBlockData(doorData);
                                 }
                             }, delay);
                         }
@@ -309,7 +293,6 @@ public class SignListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-    	//if (event.getBlock().getType().equals(Material.WALL_SIGN)) {
         if (event.getBlock().getBlockData() instanceof WallSign) {
             Sign wallSign = (Sign) event.getBlock().getState();
             HouseSign houseSign = new HouseSign(wallSign);

@@ -7,7 +7,6 @@ import org.bukkit.event.block.SignChangeEvent;
 import com.hektropolis.houses.Errors;
 import com.hektropolis.houses.Houses;
 import com.hektropolis.houses.Utils;
-import com.hektropolis.houses.config.Config;
 import com.hektropolis.houses.database.DatabaseQuery;
 
 public class SignProcessor {

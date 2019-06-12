@@ -87,7 +87,6 @@ public class DatabaseSynchronizer {
 			while(rs.next()) {
 				//System.out.println("Getting result");
 				w = plugin.getServer().getWorld(rs.getString("world"));
-				//if (w.getBlockAt(rs.getInt("x"), rs.getInt("y"), rs.getInt("z")).getType().equals(Material.WALL_SIGN)) {
 				if (w.getBlockAt(rs.getInt("x"), rs.getInt("y"), rs.getInt("z")).getBlockData() instanceof WallSign) {
 					Sign sign = (Sign) w.getBlockAt(rs.getInt("x"), rs.getInt("y"), rs.getInt("z")).getState();
 					HouseSign houseSign = new HouseSign(sign);

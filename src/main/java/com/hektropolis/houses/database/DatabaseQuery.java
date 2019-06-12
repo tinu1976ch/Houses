@@ -163,7 +163,7 @@ public class DatabaseQuery {
 		return rsHasOutput(rs);
 	}
 	
-	public static boolean hasTooMany(Houses plugin, String player) {
+	public boolean hasTooMany(Houses plugin, String player) {
 		int totalHouses = 0;
 		int totalRentals = 0;
 		int allowedHouses = plugin.getHousesConfig().getConfig().getInt("maximum-houses");
