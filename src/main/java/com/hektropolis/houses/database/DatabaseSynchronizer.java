@@ -5,12 +5,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.type.WallSign;
 
 import com.hektropolis.houses.Houses;
-import com.hektropolis.houses.config.Config;
 import com.hektropolis.houses.signs.BuySellSign;
 import com.hektropolis.houses.signs.HouseSign;
 import com.hektropolis.houses.signs.InfoSign;
@@ -88,7 +87,8 @@ public class DatabaseSynchronizer {
 			while(rs.next()) {
 				//System.out.println("Getting result");
 				w = plugin.getServer().getWorld(rs.getString("world"));
-				if (w.getBlockAt(rs.getInt("x"), rs.getInt("y"), rs.getInt("z")).getType().equals(Material.WALL_SIGN)) {
+				//if (w.getBlockAt(rs.getInt("x"), rs.getInt("y"), rs.getInt("z")).getType().equals(Material.WALL_SIGN)) {
+				if (w.getBlockAt(rs.getInt("x"), rs.getInt("y"), rs.getInt("z")).getBlockData() instanceof WallSign) {
 					Sign sign = (Sign) w.getBlockAt(rs.getInt("x"), rs.getInt("y"), rs.getInt("z")).getState();
 					HouseSign houseSign = new HouseSign(sign);
 					if (rs.getString("type").equalsIgnoreCase("buy") || rs.getString("type").equalsIgnoreCase("sell")) {

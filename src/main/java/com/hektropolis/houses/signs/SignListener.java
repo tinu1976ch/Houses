@@ -11,6 +11,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.type.WallSign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,9 +26,6 @@ import com.hektropolis.houses.Permissions;
 import com.hektropolis.houses.Ranks;
 import com.hektropolis.houses.Utils;
 import com.hektropolis.houses.database.DatabaseQuery;
-import java.util.logging.Level;
-import org.bukkit.event.Event;
-import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
 public class SignListener implements Listener {
@@ -55,7 +53,8 @@ public class SignListener implements Listener {
             return;
         }
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (clicked.getType().equals(Material.WALL_SIGN)) {
+        	//if (clicked.getType().equals(Material.WALL_SIGN)) {
+            if (clicked.getBlockData() instanceof WallSign) {
                 houseSign = new HouseSign((Sign) clicked.getState()).getType();
                 int houseClass = 0;
                 int houseNumber = 0;
@@ -174,7 +173,7 @@ public class SignListener implements Listener {
                         error.notify("You are not allowed to leave houses");
                     }
                 }
-            } else if (clicked.getType().equals(Material.IRON_DOOR_BLOCK)) {
+            } else if (clicked.getType().equals(Material.IRON_DOOR)) {
                 event.setCancelled(true);
                 BlockState state = clicked.getState();
                 Door door = (Door) state.getData();
@@ -306,7 +305,8 @@ public class SignListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        if (event.getBlock().getType().equals(Material.WALL_SIGN)) {
+    	//if (event.getBlock().getType().equals(Material.WALL_SIGN)) {
+        if (event.getBlock().getBlockData() instanceof WallSign) {
             Sign wallSign = (Sign) event.getBlock().getState();
             HouseSign houseSign = new HouseSign(wallSign);
             if (houseSign.isValid()) {

@@ -14,9 +14,13 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.Bisected;
+import org.bukkit.block.data.Directional;
+import org.bukkit.block.data.type.Door;
+import org.bukkit.block.data.type.WallSign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.material.Door;
+//import org.bukkit.material.Door;
 
 import com.hektropolis.houses.commands.Helper;
 import com.hektropolis.houses.signs.HouseSign;
@@ -27,18 +31,28 @@ public class Utils {
 	private static ChatColor dAqua = ChatColor.DARK_AQUA;
 
 	public static Block getDoorFromSign(Sign sign) {
-		BlockFace signFace = ((org.bukkit.material.Sign) sign.getData()).getAttachedFace();
-		Block block = sign.getBlock().getRelative(signFace);
+		//BlockFace signFace = ((org.bukkit.material.Sign) sign.getData()).getAttachedFace();
+		//Block block = sign.getBlock().getRelative(signFace);
+		Directional dir = (Directional)sign.getBlockData();
+		BlockFace attachedface = dir.getFacing().getOppositeFace();
+		Block block = sign.getBlock().getRelative(attachedface);
+		//debug
+		/*Bukkit.getLogger().info("dir = " + dir.toString());
+		Bukkit.getLogger().info("attachedface = " + attachedface.toString());
+		Bukkit.getLogger().info("block = " + block.getType());*/
+		/*int ix = sign.getX();
+		int iy = sign.getY();
+		int iz = sign.getZ();*/
 		int ix = block.getX();
 		int iy = block.getY();
 		int iz = block.getZ();
-		if (signFace.equals(BlockFace.NORTH) || signFace.equals(BlockFace.SOUTH)) {
+		if (attachedface.equals(BlockFace.NORTH) || attachedface.equals(BlockFace.SOUTH)) {
 			for (int x = ix - 1; x <= ix + 1; x++ ) {
 				for (int y = iy - 2; y <= iy; y++ ) {
 					block = block.getWorld().getBlockAt(x, y, iz);
-					if (block.getType().equals(Material.IRON_DOOR_BLOCK)) {
+					if (block.getType() == Material.IRON_DOOR) {
 						block.getRelative(BlockFace.DOWN);
-						if(!block.getType().equals(Material.IRON_DOOR_BLOCK)) {
+						if(block.getType() != Material.IRON_DOOR) {
 							block.getRelative(BlockFace.UP);
 						}
 						return block;
@@ -46,13 +60,15 @@ public class Utils {
 				}
 			}
 		}
-		else if (signFace.equals(BlockFace.EAST) || signFace.equals(BlockFace.WEST)) {
+		else if (attachedface.equals(BlockFace.EAST) || attachedface.equals(BlockFace.WEST)) {
 			for (int y = iy - 2; y <= iy; y++ ) {
 				for (int z = iz - 1; z <= iz + 1; z++ ) {
 					block = block.getWorld().getBlockAt(ix, y, z);
-					if (block.getType().equals(Material.IRON_DOOR_BLOCK)) {
+					//debug
+					Bukkit.getLogger().info("test block = " + block.getType());
+					if (block.getType() == Material.IRON_DOOR) {
 						block.getRelative(BlockFace.DOWN);
-						if(!block.getType().equals(Material.IRON_DOOR_BLOCK)) {
+						if(block.getType() == Material.IRON_DOOR) {
 							block.getRelative(BlockFace.UP);
 						}
 						return block;
@@ -64,11 +80,14 @@ public class Utils {
 	}
 
 	public static HouseSign[] getSignsFromDoor(Block doorBlock) {
-		if (doorBlock == null)
+		if (doorBlock == null) {
 			return null;
+		}
 		List<HouseSign> signList = new ArrayList<HouseSign>();
-		Door door = (Door) doorBlock.getState().getData();
-		if(!door.isTopHalf())
+		//Door door = (Door) doorBlock.getState().getData();
+		Door door = (Door) doorBlock.getBlockData();
+		if (door.getHalf() != Bisected.Half.TOP)
+		//if(!door.isTopHalf())
 			doorBlock = doorBlock.getRelative(BlockFace.UP);
 		int ix = doorBlock.getX();
 		int iy = doorBlock.getY();
@@ -78,7 +97,8 @@ public class Utils {
 			for (int y = iy - r; y <= iy + r; y++ ) {
 				for (int z = iz - r; z <= iz + r; z++ ) {
 					Block block = doorBlock.getWorld().getBlockAt(x, y, z);
-					if (block.getType().equals(Material.WALL_SIGN)) {
+					//if (block.getType().equals(Material.WALL_SIGN)) {
+					if (block.getBlockData() instanceof WallSign) {
 						HouseSign sign = new HouseSign((Sign) block.getState());
 						if (sign.isValid())
 							signList.add(sign.getType());
@@ -159,7 +179,8 @@ public class Utils {
 						Block sign = world.getBlockAt(x, y, z);
 						String signAt = "Sign at x=" + x + " y=" + y + " z=" + z;
 						String delete = "DELETE FROM signs WHERE x='" + x + "' AND y='" + y + "' AND z='" + z + "'";
-						if (sign.getType().equals(Material.WALL_SIGN)) {
+						//if (sign.getType().equals(Material.WALL_SIGN)) {
+						if (sign.getBlockData() instanceof WallSign) {
 							HouseSign houseSign = new HouseSign((Sign) sign.getState());
 							if (houseSign.getHouseClass() != rs.getInt("class") ||
 									houseSign.getHouseNumber() != rs.getInt("number") ||

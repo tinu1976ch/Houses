@@ -19,6 +19,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.type.WallSign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -426,7 +427,8 @@ public class Commands implements CommandExecutor {
                 if (rsS.next()) {
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Teleporting to class &c" + rsS.getInt("class") + "&6 number &c" + rsS.getInt("number") + "..."));
                     Block sign = player.getWorld().getBlockAt(rsS.getInt("x"), rsS.getInt("y"), rsS.getInt("z"));
-                    if (sign.getType() == Material.WALL_SIGN) {
+                    //if (sign.getType() == Material.WALL_SIGN) {
+                    if (sign.getBlockData() instanceof WallSign) {
                         doorBlock = Utils.getDoorFromSign((Sign) sign.getState());
                     }
                     rsS.close();
@@ -832,7 +834,8 @@ public class Commands implements CommandExecutor {
                         for (int y = 0; y <= 255; y++) {
                             for (int z = pz - r; z <= pz + r; z++) {
                                 scans++;
-                                if (w.getBlockAt(x, y, z).getType().equals(Material.WALL_SIGN)) {
+                                //if (w.getBlockAt(x, y, z).getType().equals(Material.WALL_SIGN)) {
+                                if (w.getBlockAt(x, y, z).getBlockData() instanceof WallSign) {
                                     Sign sign = (Sign) w.getBlockAt(x, y, z).getState();
                                     HouseSign houseSign = new HouseSign(sign);
                                     signs++;
