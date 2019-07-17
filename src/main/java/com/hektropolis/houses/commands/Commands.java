@@ -432,7 +432,7 @@ public class Commands implements CommandExecutor {
                     }
                     rsS.close();
                     if (doorBlock != null) {
-                    	Door door = (Door) doorBlock.getBlockData();
+                        Door door = (Door) doorBlock.getBlockData();
                         Location loc = doorBlock.getRelative(door.getFacing().getOppositeFace()).getLocation();
                         player.teleport(loc);
                         while (!(player.getLocation().getBlock().getType() == Material.AIR) && player.getLocation().getBlockY() < 253) {
